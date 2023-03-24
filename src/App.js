@@ -1,23 +1,36 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import TodoForm from './TodoForm';
+import TodoList from './TodoList';
 
 function App() {
+
+  const [items, setItems] = useState([]);
+  const [newItem, setNewItem] = useState('');
+
+  const completeTodo = (id) => {
+    const updateTodos= [...items].map((item) => {
+      if(item.id === id) {
+        item.completed = !item.completed
+        const color = 'green'
+        const lineThrough = 'line-through'
+        item.value = <span style={{color: color, textDecoration: lineThrough}}>{item.value}</span>
+      }
+      return item
+    })
+    setItems(updateTodos)
+  }
+
+  const deleteItem = (id) => {
+    const updatedList = items.filter(item => item.id !== id);
+    setItems(updatedList);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ width: '100%', textAlign: 'center'}}>
+      <h1>Todo List</h1>
+      <TodoForm setItems={setItems} newItem={newItem} setNewItem={setNewItem} />
+      <TodoList items={items} deleteItem={deleteItem} completeTodo={completeTodo}/>
     </div>
   );
 }
